@@ -1,28 +1,38 @@
 from rest_framework import serializers
-from relations.serializers import RelationSerializer
 from .models import User
+
+
+class TinyUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id",)
 
 
 class UserSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True)
-    relations = RelationSerializer()
 
     class Meta:
         model = User
         fields = (
             "id",
             "username",
-            "first_name",
             "last_name",
             "email",
             "avatar",
             "tier",
             "bio",
-            "relations",
+            "blocked_user",
+            "following_user",
+            "followers",
+            "game_list",
             "password",
         )
-        read_only_fields = ("id", "avatar", "tier")
+        read_only_fields = ("id", "username", "email", "tier", "followers")
+
+    def get_followers(self, obj):
+        user = obj.user
+        return TinyUserSerializer(user.followers.all(), many=True).data
 
     def create(self, validated_data):
         password = validated_data.get("password")
@@ -30,9 +40,3 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
-
-    def update(self, instance, validated_data):
-        instance.bio = validated_data.get("bio", instance.bio)
-        instance.set_password(validated_data.get("password", instance.password))
-        instance.save()
-        return instance

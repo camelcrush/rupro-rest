@@ -10,3 +10,12 @@ class PostAdmin(admin.ModelAdmin):
         "game",
         "user",
     )
+
+
+@admin.register(models.Photo)
+class PhotoAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "file",
+        "post",
+    )

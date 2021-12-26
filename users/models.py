@@ -38,6 +38,14 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=80, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
+    likes = models.ManyToManyField("posts.Post", related_name="likes", blank=True)
+    following_user = models.ManyToManyField(
+        "users.User", related_name="followers", symmetrical=False, blank=True
+    )
+    blocked_user = models.ManyToManyField(
+        "users.User", related_name="blocked_users", symmetrical=False, blank=True
+    )
+    game_list = models.ManyToManyField("games.Game", blank=True)
 
     class Meta:
         ordering = ["-pk"]

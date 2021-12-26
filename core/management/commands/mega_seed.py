@@ -1,6 +1,4 @@
 import random
-from relations.models import Relation
-from faker import Faker
 from django.core.management.base import BaseCommand
 from django_seed import Seed
 from users.models import User
@@ -29,11 +27,6 @@ class Command(BaseCommand):
             },
         )
         post_seeder.execute()
-
-        fake = Faker()
-
-        for user in users:
-            Relation.objects.create(user=user)
 
         board_seeder = Seed.seeder()
         board_seeder.add_entity(

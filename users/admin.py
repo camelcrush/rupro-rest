@@ -15,6 +15,9 @@ class UserAdmin(UserAdmin):
                     "tier",
                     "gender",
                     "bio",
+                    "blocked_user",
+                    "following_user",
+                    "game_list",
                     "login_method",
                 )
             },

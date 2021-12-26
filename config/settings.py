@@ -43,7 +43,6 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
-    "relations.apps.RelationsConfig",
     "posts.apps.PostsConfig",
     "boards.apps.BoardsConfig",
     "games.apps.GamesConfig",

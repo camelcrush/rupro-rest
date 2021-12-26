@@ -1,12 +1,30 @@
 from rest_framework import serializers
-from .models import Post
+from .models import Photo, Post
+
+
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        exclude = ("post",)
 
 
 class PostSerializer(serializers.ModelSerializer):
+
+    is_like = serializers.SerializerMethodField()
+    photos = PhotoSerializer(read_only=True, many=True)
+
     class Meta:
         model = Post
         exclude = ("modified",)
-        read_only_fields = ("user", "id", "created", "updated")
+        read_only_fields = ("user", "id", "created", "updated", "photos")
+
+    def get_is_like(self, obj):
+        request = self.context.get("request")
+        if request:
+            user = request.user
+            if user.is_authenticated:
+                return obj in user.likes.all()
+        return False
 
     def create(self, validated_data):
         request = self.context.get("request")
