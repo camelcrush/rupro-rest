@@ -22,7 +22,7 @@ class Post(CoreModel):
 
 class Photo(CoreModel):
 
-    file = models.ImageField(upload_to="posts")
+    file = models.ImageField(upload_to="posts/%Y/%m/%d")
     post = models.ForeignKey(
         "posts.Post", related_name="photos", on_delete=models.CASCADE
     )
