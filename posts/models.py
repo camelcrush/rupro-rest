@@ -22,10 +22,10 @@ class Post(CoreModel):
 
 class Photo(CoreModel):
 
-    file = models.ImageField(upload_to="posts", blank=True, null=True)
+    file = models.ImageField(upload_to="posts")
     post = models.ForeignKey(
         "posts.Post", related_name="photos", on_delete=models.CASCADE
     )
 
     def __str__(self):
-        return self.post.name
+        return self.post.title

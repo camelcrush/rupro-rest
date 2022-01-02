@@ -9,6 +9,7 @@ urlpatterns = [
     path("login/", views.login),
     path("me/", views.MeView.as_view()),
     path("<int:pk>/", views.user_detail),
+    path("me/likes/", views.LikesView.as_view()),
     path("me/blocking/", views.BlockView.as_view()),
     path("me/following/", views.FollowingView.as_view()),
     path("me/game_list/", views.GameListView.as_view()),

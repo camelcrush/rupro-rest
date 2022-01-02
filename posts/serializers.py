@@ -5,7 +5,7 @@ from .models import Photo, Post
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
-        exclude = ("post",)
+        fields = ("id", "file")
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -28,5 +28,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get("request")
+        photos = request.FILES
         post = Post.objects.create(**validated_data, user=request.user)
+        for photo in photos.getlist("file"):
+            Photo.objects.create(file=photo, post=post)
         return post
