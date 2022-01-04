@@ -46,6 +46,8 @@ PROJECT_APPS = [
     "posts.apps.PostsConfig",
     "boards.apps.BoardsConfig",
     "games.apps.GamesConfig",
+    "gamescores.apps.GamescoresConfig",
+    "reviews.apps.ReviewsConfig",
     "conversations.apps.ConversationsConfig",
 ]
 
