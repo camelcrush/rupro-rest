@@ -24,12 +24,12 @@ class Review(CoreModel):
     user = models.ForeignKey(
         "users.User", related_name="reviews", on_delete=models.CASCADE
     )
-    game_score = models.ForeignKey(
+    reviewed_game_score = models.ForeignKey(
         "gamescores.GameScore", related_name="reviews", on_delete=models.CASCADE
     )
 
     def __str__(self):
-        return f"{self.review} - {self.game_score}"
+        return f"{self.review} - {self.reviewed_game_score}"
 
     def rating_average(self):
         avg = (

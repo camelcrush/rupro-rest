@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
             "game_list",
             "password",
         )
-        read_only_fields = ("id", "username", "email", "tier", "followers")
+        read_only_fields = ("id", "tier", "followers")
 
     def get_followers(self, obj):
         user = obj.user

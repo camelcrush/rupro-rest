@@ -1,8 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework import permissions
 from .models import GameScore
 from .serializers import GameScoreSerializer
-from .permissions import IsOwner
 
 
 class GameScoreViewSet(ModelViewSet):
@@ -11,10 +10,10 @@ class GameScoreViewSet(ModelViewSet):
     serializer_class = GameScoreSerializer
 
     def get_permissions(self):
-        if self.action == "list":
-            permission_classes = [IsAdminUser]
-        elif self.action == "create" or self.action == "retrieve":
-            permission_classes = [IsAuthenticated]
+        if self.action == "list" or self.action == "retrieve":
+            permission_classes = [permissions.AllowAny]
+        elif self.action == "create":
+            permission_classes = [permissions.IsAuthenticated]
         else:
-            permission_classes = [IsOwner]
+            permission_classes = [permissions.IsAdminUser]
         return [permission() for permission in permission_classes]

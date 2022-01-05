@@ -14,7 +14,7 @@ class Game(CoreModel):
         (GAME_DIA2, "Diablo2"),
     )
 
-    name = models.CharField(max_length=140, choices=LOGIN_CHOICES)
+    name = models.CharField(max_length=140)
     kind = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
