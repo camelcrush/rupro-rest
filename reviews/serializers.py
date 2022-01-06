@@ -17,7 +17,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             "physical",
             "sense",
         )
-        read_only_fields = ("id", "user", "reviewed_game_score", "rating_average")
+        read_only_fields = ("id", "user", "rating_average")
 
     def create(self, validated_data):
         request = self.context.get("request")

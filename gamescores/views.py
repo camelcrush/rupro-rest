@@ -12,7 +12,7 @@ class GameScoreViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "list" or self.action == "retrieve":
             permission_classes = [permissions.AllowAny]
-        elif self.action == "create":
+        elif self.action == "create" or self.action == "partial_update":
             permission_classes = [permissions.IsAuthenticated]
         else:
             permission_classes = [permissions.IsAdminUser]

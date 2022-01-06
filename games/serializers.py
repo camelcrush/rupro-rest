@@ -5,5 +5,5 @@ from .models import Game
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ("name", "kind")
+        fields = ("id", "name", "kind")
         read_only_fields = "__all__"

@@ -4,10 +4,10 @@ from core.models import CoreModel
 
 class GameScore(CoreModel):
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         "users.User", related_name="game_scores", on_delete=models.CASCADE
     )
-    game = models.ForeignKey(
+    game = models.OneToOneField(
         "games.Game", related_name="user_scores", on_delete=models.CASCADE
     )
 

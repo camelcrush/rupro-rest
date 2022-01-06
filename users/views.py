@@ -77,7 +77,7 @@ class LikesView(APIView):
         return Response(serializer.data)
 
     def put(self, request):
-        pk = request.get("pk", None)
+        pk = request.data.get("pk", None)
         user = request.user
         if pk is not None:
             try:
