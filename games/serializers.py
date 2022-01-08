@@ -6,4 +6,4 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ("id", "name", "kind")
-        read_only_fields = "__all__"
+        read_only_fields = ("__all__",)
