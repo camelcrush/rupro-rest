@@ -5,13 +5,33 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from .serializers import UserSerializer, TinyUserSerializer
 from .models import User
 from games.models import Game
 from .permissions import IsSelf
+
+
+class UserViewSet(ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [IsAdminUser]
+        if (
+            self.action == "create"
+            or self.action == "retrieve"
+            or self.action == "favs"
+        ):
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsSelf | IsAdminUser]
+        return [permission() for permission in permission_classes]
 
 
 class UsersView(APIView):

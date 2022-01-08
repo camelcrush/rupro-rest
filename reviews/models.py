@@ -5,7 +5,7 @@ from core.models import CoreModel
 
 class Review(CoreModel):
 
-    review = models.TextField(max_length=200)
+    review = models.TextField(max_length=300)
     manner = models.IntegerField(
         "manner", validators=[MinValueValidator(1), MaxValueValidator(5)], default=1
     )
