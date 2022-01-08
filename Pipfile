@@ -10,6 +10,8 @@ django-seed = "*"
 psycopg2-binary = "*"
 pillow = "*"
 pyjwt = "*"
+django-dotenv = "*"
+python-dotenv = "*"
 
 [dev-packages]
 black = "*"
