@@ -13,7 +13,7 @@ class Conversation(CoreModel):
     def __str__(self):
         usernames = []
         for user in self.participants.all():
-            usernames.append(user.username)
+            usernames.append(user.first_name)
         return ", ".join(usernames)
 
     def count_messages(self):

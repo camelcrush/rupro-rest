@@ -12,6 +12,7 @@ pillow = "*"
 pyjwt = "*"
 django-dotenv = "*"
 python-dotenv = "*"
+django-utils-six = "*"
 
 [dev-packages]
 black = "*"

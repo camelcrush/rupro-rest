@@ -29,7 +29,8 @@ class User(AbstractUser):
         (LOGIN_APPLE, "Apple"),
     )
 
-    avatar = models.ImageField(upload_to="avatars", blank=True)
+    active = models.BooleanField(default=False)
+    avatar = models.ImageField(upload_to="avatars", blank=True, null=True)
     tier = models.CharField("tier", max_length=20, blank=True)
     gender = models.CharField(
         "gender", choices=GENDER_CHOICES, max_length=10, blank=True

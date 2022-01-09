@@ -11,6 +11,7 @@ class UserAdmin(UserAdmin):
             "Custom Profile",
             {
                 "fields": (
+                    "active",
                     "avatar",
                     "tier",
                     "gender",
@@ -24,4 +25,4 @@ class UserAdmin(UserAdmin):
         ),
     )
 
-    list_display = UserAdmin.list_display + ("gender", "tier", "login_method")
+    list_display = UserAdmin.list_display + ("gender", "tier", "login_method", "active")

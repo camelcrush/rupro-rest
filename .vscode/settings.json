@@ -1,4 +1,6 @@
 {
     "python.pythonPath": "/Users/js/.local/share/virtualenvs/rupro-rest-PZfvEvu8/bin/python",
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
 }

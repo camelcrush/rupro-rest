@@ -1,3 +1,5 @@
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from games.serializers import GameSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
@@ -9,11 +11,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from .serializers import UserSerializer, TinyUserSerializer
 from .models import User
 from games.models import Game
 from games.serializers import GameSerializer
 from .permissions import IsSelf
+from .tokens import account_activation_token
 
 
 class UserViewSet(ModelViewSet):
@@ -155,3 +159,24 @@ class UserViewSet(ModelViewSet):
             except Game.DoesNotExist:
                 pass
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserActive(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        try:
+            if user is not None and account_activation_token.check_token(user, token):
+                user.active = True
+                user.save()
+                return Response(user.email + "계정이 활성화 되었습니다", status=status.HTTP_200_OK)
+            else:
+                return Response("만료된 링크입니다", status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response("계정활성화할 수 없습니다", status=status.HTTP_400_BAD_REQUEST)

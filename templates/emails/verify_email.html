@@ -1,0 +1,4 @@
+<h2>Verify Email</h2>
+<span>아래 링크를 클릭해서 계정을 인증해 주세요.</span>
+
+http://{{domain}}{% url 'users:activate' uidb64=uid token=token %}
