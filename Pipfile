@@ -13,6 +13,7 @@ pyjwt = "*"
 django-dotenv = "*"
 python-dotenv = "*"
 django-utils-six = "*"
+requests = "*"
 
 [dev-packages]
 black = "*"

@@ -4,11 +4,14 @@ from games.serializers import GameSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
 import jwt
+import os
+import requests
+from django.shortcuts import redirect
 from django.conf import settings
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -55,6 +58,11 @@ class UserViewSet(ModelViewSet):
             return Response(data={"token": encoded_jwt, "id": user.pk})
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    @action(detail=False, methods=["get"])
+    def logout(self, request):
+        logout(request)
+        return Response()
 
     @action(detail=True)
     def likes(self, request, pk):
@@ -180,3 +188,68 @@ class UserActive(APIView):
                 return Response("만료된 링크입니다", status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             return Response("계정활성화할 수 없습니다", status=status.HTTP_400_BAD_REQUEST)
+
+
+class KakaoLogin(APIView):
+    def get(self, request):
+        client_id = os.environ.get("KAKAO_ID")
+        redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+        response = redirect(
+            f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
+        )
+        return response
+
+
+class KakaoCallback(APIView):
+    def get(self, request):
+        try:
+            code = request.GET.get("code")
+            client_id = os.environ.get("KAKAO_ID")
+            redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+            token_request = requests.post(
+                f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
+            )
+            token_json = token_request.json()
+            error = token_json.get("error", None)
+            if error is not None:
+                return Response(
+                    {"error_message": "인증코드를 받을 수 없습니다."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            access_token = token_json.get("access_token")
+            profile_request = requests.get(
+                "https://kapi.kakao.com/v2/user/me",
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            profile_json = profile_request.json()
+            email = profile_json.get("kakao_account").get("email", None)
+            if email is None:
+                return Response(
+                    {"error_message": "이메일 정보가 없습니다."}, status=status.HTTP_404_NOT_FOUND
+                )
+            nickname = profile_json.get("properties").get("nickname", None)
+            try:
+                user = User.objects.get(email=email)
+                if user.login_method != User.LOGIN_KAKAO:
+                    return Response(
+                        {"error_message": f"다음 경로로 로그인 하세요, {user.login_method}"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+            except User.DoesNotExist:
+                user = User.objects.create(
+                    email=email,
+                    username=email,
+                    first_name=nickname,
+                    login_method=User.LOGIN_KAKAO,
+                    active=True,
+                )
+                user.set_unusable_password()
+                user.save()
+            encoded_jwt = jwt.encode(
+                {"pk": user.pk}, settings.SECRET_KEY, algorithm="HS256"
+            )
+            return Response(data={"token": encoded_jwt, "id": user.pk})
+        except Exception:
+            return Response(
+                {"error_message": "로그인할 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST
+            )

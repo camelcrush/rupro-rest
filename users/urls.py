@@ -14,4 +14,6 @@ urlpatterns = [
         views.UserActive.as_view(),
         name="activate",
     ),
+    path("login/kakao", views.KakaoLogin.as_view()),
+    path("login/kakao/callback", views.KakaoCallback.as_view()),
 ]
