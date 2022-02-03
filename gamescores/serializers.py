@@ -16,6 +16,7 @@ class GameScoreSerializer(serializers.ModelSerializer):
             "user",
             "game",
             "is_active",
+            "grade",
             "total_rating",
             "manner_rating",
             "attitude_rating",
@@ -27,6 +28,7 @@ class GameScoreSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "user",
             "is_active",
+            "grade",
             "total_rating",
             "manner_rating",
             "attitude_rating",

@@ -14,6 +14,20 @@ class GameScore(CoreModel):
     def __str__(self):
         return f"{self.user} - {self.game}"
 
+    def grade(self):
+        all_reviews = self.reviews.all()
+        total_rating = self.total_rating
+        if len(all_reviews) >= 5 and total_rating >= 3:
+            return "Uncommon"
+        elif len(all_reviews) >= 10 and total_rating >= 3:
+            return "Rare"
+        elif len(all_reviews) >= 20 and total_rating >= 3:
+            return "Legendary"
+        elif len(all_reviews) >= 20 and total_rating >= 4:
+            return "Exotic"
+        else:
+            return "Common"
+
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
